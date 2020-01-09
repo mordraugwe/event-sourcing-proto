@@ -1,24 +1,14 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace EventSourcingTest
 {
-    public interface IMessage { }
-    public class Command : IMessage { }
-    public class Event : IMessage { }
-    public interface ICommandHandler<TCommand> where TCommand : IMessage
-    {
-        void Handle(TCommand message);
-    }
-
-    public abstract class AggregateRoot : Entity
+    public abstract class AggregateRoot //: Entity
     {
         private readonly List<Event> _changes = new List<Event>();
 
         public Guid Id { get; protected set; }
-        public int Version { get; internal set; }
+        public int RevisionNumber { get; internal set; }
 
         public IEnumerable<Event> GetUncommittedChanges()
         {
@@ -47,12 +37,4 @@ namespace EventSourcingTest
             if (isNew) _changes.Add(@event);
         }
     }
-
-    public interface IRepository<T> where T : AggregateRoot, new()
-    {
-        void Save(AggregateRoot aggregate, int exptectedVersion);
-        T GetById(Guid id);
-    }
-
-
 }
