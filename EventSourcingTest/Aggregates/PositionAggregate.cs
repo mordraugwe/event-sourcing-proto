@@ -7,17 +7,21 @@ namespace EventSourcingTest.Aggregates
 {
     public class PositionAggregate : AggregateRoot
     {
-        public static Event[] CreateNewPosition(string jobTitle)
+        private string _id;
+
+        public PositionAggregate()
         {
-            return new []{ new Event()
-            {
-                AggregateId = Guid.NewGuid().ToString(),
-                Data = new JObject() { "Name" , jobTitle },
-                DateAdded = DateTime.Now,
-                EffectiveFrom = DateTime.Now,
-                EventType = "CreatePosition",
-                RevisionNumber = 1
-            }};
+            
+        }
+
+        public PositionAggregate(string id, string jobTitle)
+        {
+            ApplyChange(new Event(){AggregateId = id, RevisionNumber = -1, Data = JObject.FromObject(new {Id = id, JobTitle = jobTitle})});
+        }
+
+        public void AssignToDepartment(string departmentId)
+        {
+            ApplyChange(new Event(){AggregateId = Id, Data = JObject.FromObject(new { UnitId = departmentId })});
         }
     }
 }

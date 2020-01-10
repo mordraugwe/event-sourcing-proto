@@ -7,7 +7,7 @@ namespace EventSourcingTest
     {
         private readonly List<Event> _changes = new List<Event>();
 
-        public Guid Id { get; protected set; }
+        public string Id { get; protected set; }
         public int RevisionNumber { get; internal set; }
 
         public IEnumerable<Event> GetUncommittedChanges()
